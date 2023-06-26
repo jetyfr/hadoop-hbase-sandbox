@@ -1,0 +1,15 @@
+version: 'latest'
+
+services:
+  hadoop:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-namenode
+    hostname: namenode
+    domainname: hadoop
+    ports:
+      - "9870:9870"
+      - "9000:9000"
+    volumes:
+      - ./hadoop_namenode:/hadoop/dfs/name
+    env_file:
+      - ./hadoop.env
