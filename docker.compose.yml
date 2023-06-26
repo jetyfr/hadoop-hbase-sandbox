@@ -1,15 +1,40 @@
-version: 'latest'
+version: "sandbox"
 
 services:
-  hadoop:
-    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
-    container_name: hadoop-namenode
-    hostname: namenode
-    domainname: hadoop
-    ports:
-      - "9870:9870"
-      - "9000:9000"
-    volumes:
-      - ./hadoop_namenode:/hadoop/dfs/name
-    env_file:
-      - ./hadoop.env
+   namenode:
+      image: apache/hadoop:3.3.5
+      hostname: namenode
+      command: ["hdfs", "namenode"]
+      ports:
+        - 9870:9870
+      env_file:
+        - ./container.env
+      environment:
+          ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+
+   datanode:
+      image: apache/hadoop:3.3.5
+      command: ["hdfs", "datanode"]
+      env_file:
+        - ./container.env
+
+   resourcemanager:
+      image: apache/hadoop:3.3.5
+      hostname: resourcemanager
+      command: ["yarn", "resourcemanager"]
+      ports:
+         - 8088:8088
+      env_file:
+        - ./container.env
+      volumes:
+        - ./test.sh:/opt/test.sh
+
+   nodemanager:
+      image: apache/hadoop:3.3.5
+      command: ["yarn", "nodemanager"]
+      env_file:
+        - ./container.env
+
+volumes:
+    namenode:
+    datanode:
