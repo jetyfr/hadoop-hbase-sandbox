@@ -34,7 +34,3 @@ services:
     command: ["yarn", "nodemanager"]
     env_file:
       - ./config
-
-volumes:
-  namenode:
-  datanode:
