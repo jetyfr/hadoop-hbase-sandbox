@@ -2,7 +2,7 @@ version: "test"
 
 services:
   namenode:
-    build: .
+    image: sandbox/hadoop:latest
     hostname: namenode
     container_name: namenode
     command: ["hdfs", "namenode"]
@@ -12,23 +12,41 @@ services:
       - ./config
     environment:
       ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+    # volumes:
+      # - namenode:/tmp/hadoop-hadoop/dfs/name
 
   datanode-one:
-    build: .
+    image: sandbox/hadoop:latest
+    hostname: datanode-one
     container_name: datanode-one
     command: ["hdfs", "datanode"]
     env_file:
       - ./config
+    # volumes:
+      # - datanode-one:/tmp/hadoop-hadoop/dfs/data
 
   datanode-two:
-    build: .
+    image: sandbox/hadoop:latest
+    hostname: datanode-two
     container_name: datanode-two
     command: ["hdfs", "datanode"]
     env_file:
       - ./config
+    # volumes:
+      # - datanode-two:/tmp/hadoop-hadoop/dfs/data
+
+  datanode-three:
+    image: sandbox/hadoop:latest
+    hostname: datanode-three
+    container_name: datanode-three
+    command: ["hdfs", "datanode"]
+    env_file:
+      - ./config
+    # volumes:
+      # - datanode-three:/tmp/hadoop-hadoop/dfs/data
 
   resourcemanager:
-    build: .
+    image: sandbox/hadoop:latest
     hostname: resourcemanager
     container_name: resourcemanager
     command: ["yarn", "resourcemanager"]
@@ -36,11 +54,11 @@ services:
       - 8088:8088
     env_file:
       - ./config
-    volumes:
-      - ./test.sh:/opt/test.sh
+    # volumes:
+      # - ./test.sh:/opt/test.sh
 
   nodemanager:
-    build: .
+    image: sandbox/hadoop:latest
     hostname: nodemanager
     container_name: nodemanager
     command: ["yarn", "nodemanager"]
@@ -48,9 +66,15 @@ services:
       - ./config
 
   timelineserver:
-    build: .
+    image: sandbox/hadoop:latest
     hostname: timelineserver
     container_name: timelineserver
     command: ["yarn", "timelineserver"]
     env_file:
       - ./config
+
+# volumes:
+  # namenode:
+  # datanode-one:
+  # datanode-two:
+  # datanode-three:
