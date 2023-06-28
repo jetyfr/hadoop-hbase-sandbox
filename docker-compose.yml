@@ -2,8 +2,9 @@ version: "test"
 
 services:
   namenode:
-    image: apache/hadoop:3
+    build: .
     hostname: namenode
+    container_name: namenode
     command: ["hdfs", "namenode"]
     ports:
       - 9870:9870
@@ -12,15 +13,24 @@ services:
     environment:
       ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
 
-  datanode:
-    image: apache/hadoop:3
+  datanode-one:
+    build: .
+    container_name: datanode-one
+    command: ["hdfs", "datanode"]
+    env_file:
+      - ./config
+
+  datanode-two:
+    build: .
+    container_name: datanode-two
     command: ["hdfs", "datanode"]
     env_file:
       - ./config
 
   resourcemanager:
-    image: apache/hadoop:3
+    build: .
     hostname: resourcemanager
+    container_name: resourcemanager
     command: ["yarn", "resourcemanager"]
     ports:
       - 8088:8088
@@ -30,7 +40,17 @@ services:
       - ./test.sh:/opt/test.sh
 
   nodemanager:
-    image: apache/hadoop:3
+    build: .
+    hostname: nodemanager
+    container_name: nodemanager
     command: ["yarn", "nodemanager"]
+    env_file:
+      - ./config
+
+  timelineserver:
+    build: .
+    hostname: timelineserver
+    container_name: timelineserver
+    command: ["yarn", "timelineserver"]
     env_file:
       - ./config
