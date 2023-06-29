@@ -11,9 +11,9 @@ services:
     env_file:
       - ./config
     environment:
-      ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
-    # volumes:
-      # - namenode:/tmp/hadoop-hadoop/dfs/name
+      ENSURE_NAMENODE_DIR: "enforce-format" # hadoop runner only formats namenode if the directory doesn't exist
+    volumes:
+      - namenode:/opt/hadoop/dfs/name
 
   datanode-one:
     image: sandbox/hadoop:latest
@@ -22,8 +22,8 @@ services:
     command: ["hdfs", "datanode"]
     env_file:
       - ./config
-    # volumes:
-      # - datanode-one:/tmp/hadoop-hadoop/dfs/data
+    volumes:
+      - datanode-one:/opt/hadoop/dfs/data
 
   datanode-two:
     image: sandbox/hadoop:latest
@@ -32,8 +32,8 @@ services:
     command: ["hdfs", "datanode"]
     env_file:
       - ./config
-    # volumes:
-      # - datanode-two:/tmp/hadoop-hadoop/dfs/data
+    volumes:
+      - datanode-two:/opt/hadoop/dfs/data
 
   datanode-three:
     image: sandbox/hadoop:latest
@@ -42,8 +42,8 @@ services:
     command: ["hdfs", "datanode"]
     env_file:
       - ./config
-    # volumes:
-      # - datanode-three:/tmp/hadoop-hadoop/dfs/data
+    volumes:
+      - datanode-three:/opt/hadoop/dfs/data
 
   resourcemanager:
     image: sandbox/hadoop:latest
@@ -54,8 +54,10 @@ services:
       - 8088:8088
     env_file:
       - ./config
-    # volumes:
-      # - ./test.sh:/opt/test.sh
+    volumes:
+      - ./scripts:/opt/hadoop/scripts
+      - ./samples:/opt/hadoop/samples
+      - ./playground/target/playground.jar:/opt/hadoop/jars/playground.jar
 
   nodemanager:
     image: sandbox/hadoop:latest
@@ -72,9 +74,12 @@ services:
     command: ["yarn", "timelineserver"]
     env_file:
       - ./config
+    volumes:
+      - timelineserver:/opt/hadoop/yarn/timeline
 
-# volumes:
-  # namenode:
-  # datanode-one:
-  # datanode-two:
-  # datanode-three:
+volumes:
+  namenode:
+  datanode-one:
+  datanode-two:
+  datanode-three:
+  timelineserver:

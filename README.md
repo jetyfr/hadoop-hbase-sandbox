@@ -8,19 +8,33 @@ sandbox project for diginamic classes on hadoop
 
 ## Getting started
 
-### build the image
+- build the image
 
 ```bash
 docker build -t sandbox/hadoop:latest .
 ```
 
-### Start the sandbox
+- Start the sandbox
 
 ```bash
 docker-compose up -d
 ```
 
-### Stop the sandbox
+- Connect to the sandbox
+
+```bash
+docker exec -it resourcemanager bash
+```
+
+## Clean up
+
+- Stop the sandbox
+
+```bash
+docker-compose down
+```
+
+- Delete the volumes
 
 ```bash
 docker-compose down -v
