@@ -23,7 +23,8 @@ docker-compose up -d
 - Connect to the sandbox
 
 ```bash
-docker exec -it resourcemanager bash
+# arbitrarly chosen container, did not try interacting with the cluster from elsewhere
+docker exec -it resourcemanager bash 
 ```
 
 ## Clean up

@@ -8,18 +8,24 @@ services:
     command: ["hdfs", "namenode"]
     ports:
       - 9870:9870
+      - 8020:8020 # required to acces hdfs from the host
     env_file:
       - ./config
     environment:
-      ENSURE_NAMENODE_DIR: "enforce-format" # hadoop runner only formats namenode if the directory doesn't exist
+
+      ENSURE_NAMENODE_DIR: "/opt/hadoop/dfs/name" # required to set cluster id with ENSURE_NAMENODE_CLUSTERID
+      # ENSURE_NAMENODE_DIR: "enforce-format" # use ONLY when CREATING container's volumes, will format namenode
+      ENSURE_NAMENODE_CLUSTERID: "sandbox" # ensures that datanodes will join previously joined cluster
     volumes:
       - namenode:/opt/hadoop/dfs/name
 
   datanode-one:
     image: sandbox/hadoop:latest
-    hostname: datanode-one
+    hostname: localhost
     container_name: datanode-one
     command: ["hdfs", "datanode"]
+    ports:
+      - 9864:9864
     env_file:
       - ./config
     volumes:
@@ -27,9 +33,11 @@ services:
 
   datanode-two:
     image: sandbox/hadoop:latest
-    hostname: datanode-two
+    hostname: localhost
     container_name: datanode-two
     command: ["hdfs", "datanode"]
+    ports:
+      - 9865:9864
     env_file:
       - ./config
     volumes:
@@ -37,9 +45,11 @@ services:
 
   datanode-three:
     image: sandbox/hadoop:latest
-    hostname: datanode-three
+    hostname: localhost
     container_name: datanode-three
     command: ["hdfs", "datanode"]
+    ports:
+      - 9866:9864
     env_file:
       - ./config
     volumes:
@@ -57,7 +67,6 @@ services:
     volumes:
       - ./scripts:/opt/hadoop/scripts
       - ./samples:/opt/hadoop/samples
-      - ./playground/target/playground.jar:/opt/hadoop/jars/playground.jar
 
   nodemanager:
     image: sandbox/hadoop:latest
