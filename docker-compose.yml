@@ -12,7 +12,6 @@ services:
     env_file:
       - ./config
     environment:
-
       ENSURE_NAMENODE_DIR: "/opt/hadoop/dfs/name" # required to set cluster id with ENSURE_NAMENODE_CLUSTERID
       # ENSURE_NAMENODE_DIR: "enforce-format" # use ONLY when CREATING container's volumes, will format namenode
       ENSURE_NAMENODE_CLUSTERID: "sandbox" # ensures that datanodes will join previously joined cluster
@@ -21,7 +20,7 @@ services:
 
   datanode-one:
     image: sandbox/hadoop:latest
-    hostname: localhost
+    hostname: datanode-one
     container_name: datanode-one
     command: ["hdfs", "datanode"]
     ports:
@@ -33,7 +32,7 @@ services:
 
   datanode-two:
     image: sandbox/hadoop:latest
-    hostname: localhost
+    hostname: datanode-two
     container_name: datanode-two
     command: ["hdfs", "datanode"]
     ports:
@@ -45,7 +44,7 @@ services:
 
   datanode-three:
     image: sandbox/hadoop:latest
-    hostname: localhost
+    hostname: datanode-three
     container_name: datanode-three
     command: ["hdfs", "datanode"]
     ports:

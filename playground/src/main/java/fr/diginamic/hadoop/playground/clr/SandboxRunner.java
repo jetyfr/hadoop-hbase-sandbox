@@ -17,11 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 public class SandboxRunner implements CommandLineRunner {
 
   private final ObjectMapper jackson;
+  private final WebClient client;
 
   @Override
   public void run(final String... args) throws Exception {
-
-    final var client = WebClient.create("http://localhost:9870/webhdfs/v1");
 
     client.get()
         .uri(builder -> builder
@@ -29,8 +28,8 @@ public class SandboxRunner implements CommandLineRunner {
             .queryParam("op", "OPEN")
             .build())
         .retrieve()
-        .toBodilessEntity()
-        .doOnNext(response -> response.getHeaders().get("Location").forEach(log::info))
+        .bodyToMono(String.class)
+        .doOnNext(log::info)
         .block();
   }
 
