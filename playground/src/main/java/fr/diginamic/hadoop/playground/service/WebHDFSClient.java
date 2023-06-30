@@ -1,10 +1,9 @@
 package fr.diginamic.hadoop.playground.service;
 
-import java.text.MessageFormat;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -22,9 +21,9 @@ public class WebHDFSClient {
   private final WebClient client;
 
   public <T> T fetch(final String path, final Class<T> type) {
-    return client.get()
+    return client.mutate().baseUrl(BASE_URL).build().get()
         .uri(builder -> builder
-            .path(MessageFormat.format("{0}{1}", BASE_URL, path))
+            .path(path)
             .queryParam("op", "OPEN")
             .build())
         .retrieve()
@@ -35,8 +34,10 @@ public class WebHDFSClient {
 
   @SneakyThrows
   private <T> void print(final T body) {
-    log.info("Response: {}", jackson
+    if (body instanceof JsonNode node) log.info("Response: {}", jackson
         .writerWithDefaultPrettyPrinter()
-        .writeValueAsString(body));
+        .writeValueAsString(node));
+
+    else log.info("Response: {}", body);
   }
 }
