@@ -5,7 +5,7 @@
 jars/*
 samples/*
 !jars/.ADD_JARS_TO_EXECUTE_IN_THE_CLUSTER
-!samples/.ADD_FILES_TO_ADD_TO_THE_CLUSTER
+!samples/.ADD_FILES_TO_PUT_IN_THE_CLUSTER
 
 ### ApacheHadoop ###
 *.iml
