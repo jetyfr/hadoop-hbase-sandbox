@@ -66,6 +66,7 @@ services:
     volumes:
       - ./scripts:/opt/hadoop/scripts
       - ./samples:/opt/hadoop/samples
+      - ./jars:/opt/hadoop/jars
 
   nodemanager:
     image: sandbox/hadoop:latest

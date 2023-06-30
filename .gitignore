@@ -2,7 +2,10 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,windows,macos,visualstudiocode,intellij+all,eclipse,apachehadoop
 
 ### Project ###
+jars/*
 samples/*
+!jars/.ADD_JARS_TO_EXECUTE_IN_THE_CLUSTER
+!samples/.ADD_FILES_TO_ADD_TO_THE_CLUSTER
 
 ### ApacheHadoop ###
 *.iml
