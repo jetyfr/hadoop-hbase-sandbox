@@ -17,6 +17,6 @@ public class WebClientConfiguration {
 
   @Bean
   WebClient client(final ReactorClientHttpConnector connector) {
-    return WebClient.builder().clientConnector(connector).build();
+    return WebClient.create();
   }
 }
