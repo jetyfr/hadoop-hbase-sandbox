@@ -17,8 +17,6 @@ public class WebClientConfiguration {
 
   @Bean
   WebClient client(final ReactorClientHttpConnector connector) {
-    return WebClient.builder()
-        .baseUrl("http://localhost:9870/webhdfs/v1")
-        .clientConnector(connector).build();
+    return WebClient.builder().clientConnector(connector).build();
   }
 }

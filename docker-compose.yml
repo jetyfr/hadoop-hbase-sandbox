@@ -18,41 +18,17 @@ services:
     volumes:
       - namenode:/opt/hadoop/dfs/name
 
-  datanode-one:
+  datanode:
     image: sandbox/hadoop:latest
-    hostname: datanode-one
-    container_name: datanode-one
+    hostname: localhost
+    container_name: datanode
     command: ["hdfs", "datanode"]
     ports:
       - 9864:9864
     env_file:
       - ./config
     volumes:
-      - datanode-one:/opt/hadoop/dfs/data
-
-  datanode-two:
-    image: sandbox/hadoop:latest
-    hostname: datanode-two
-    container_name: datanode-two
-    command: ["hdfs", "datanode"]
-    ports:
-      - 9865:9864
-    env_file:
-      - ./config
-    volumes:
-      - datanode-two:/opt/hadoop/dfs/data
-
-  datanode-three:
-    image: sandbox/hadoop:latest
-    hostname: datanode-three
-    container_name: datanode-three
-    command: ["hdfs", "datanode"]
-    ports:
-      - 9866:9864
-    env_file:
-      - ./config
-    volumes:
-      - datanode-three:/opt/hadoop/dfs/data
+      - datanode:/opt/hadoop/dfs/data
 
   resourcemanager:
     image: sandbox/hadoop:latest
@@ -87,7 +63,5 @@ services:
 
 volumes:
   namenode:
-  datanode-one:
-  datanode-two:
-  datanode-three:
+  datanode:
   timelineserver:
