@@ -1,11 +1,11 @@
 package fr.diginamic.hadoop.playground.util;
 
+import static javax.ws.rs.core.UriBuilder.fromUri;
+
 import java.net.URI;
 import java.util.Arrays;
 import java.util.function.Function;
 import java.util.function.Predicate;
-
-import javax.ws.rs.core.UriBuilder;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,7 +32,7 @@ public class DNSProxy {
   }
 
   private static Function<Registrar, URI> toLocal(final URI uri) {
-    return host -> UriBuilder.fromUri(uri)
+    return host -> fromUri(uri)
         .host("localhost")
         .port(host.port())
         .build();

@@ -1,14 +1,15 @@
 package fr.diginamic.hadoop.playground.service;
 
-import java.text.MessageFormat;
+import static fr.diginamic.hadoop.playground.util.DNSProxy.resolve;
+import static java.text.MessageFormat.format;
+import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
+
 import java.util.concurrent.CompletableFuture;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import fr.diginamic.hadoop.playground.util.DNSProxy;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 
@@ -22,10 +23,10 @@ public class WebHDFSClient {
 
   public CompletableFuture<Flux<DataBuffer>> open(final String path) {
     return client.get()
-        .uri(MessageFormat.format(REQUESST_TEMPLATE, StringUtils.defaultIfBlank(path, ""), "OPEN"))
+        .uri(format(REQUESST_TEMPLATE, defaultIfBlank(path, ""), "OPEN"))
         .retrieve().toBodilessEntity()
         .toFuture().thenApply(res -> client.get()
-            .uri(DNSProxy.resolve(res.getHeaders().getLocation()))
+            .uri(resolve(res.getHeaders().getLocation()))
             .retrieve().bodyToFlux(DataBuffer.class));
   }
 }

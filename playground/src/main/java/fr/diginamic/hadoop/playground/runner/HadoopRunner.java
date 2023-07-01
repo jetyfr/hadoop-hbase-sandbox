@@ -1,12 +1,13 @@
 package fr.diginamic.hadoop.playground.runner;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import static java.nio.file.Paths.get;
+import static org.apache.commons.lang3.StringUtils.isAnyBlank;
+import static org.springframework.core.io.buffer.DataBufferUtils.write;
 
-import org.apache.commons.lang3.StringUtils;
+import java.nio.file.Path;
+
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -30,10 +31,10 @@ public class HadoopRunner implements ApplicationRunner {
   public void run(final ApplicationArguments args) throws Exception {
 
     final var source = from(args, "open");
-    final var target = Paths.get(from(args, "to"));
+    final var target = get(from(args, "to"));
 
-    if (!StringUtils.isAnyBlank(source, target.toString())) client.open(source)
-        .thenApply(file -> DataBufferUtils.write(file, target))
+    if (!isAnyBlank(source, target.toString())) client.open(source)
+        .thenApply(file -> write(file, target))
         .thenApply(mono -> mono.doOnSuccess(trigger -> print(target)))
         .thenAccept(Mono::subscribe);
   }
