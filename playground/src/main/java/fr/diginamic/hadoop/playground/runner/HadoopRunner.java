@@ -33,7 +33,7 @@ public class HadoopRunner implements ApplicationRunner {
 
     client.open(path)
         .thenApply(file -> DataBufferUtils.write(file, destination))
-        .thenApply(mono -> mono.doOnSuccess(none -> print(destination)))
+        .thenApply(mono -> mono.doOnSuccess(run -> print(destination)))
         .thenAccept(Mono::subscribe);
   }
 
