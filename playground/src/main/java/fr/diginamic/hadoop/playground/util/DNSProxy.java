@@ -2,6 +2,8 @@ package fr.diginamic.hadoop.playground.util;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.ws.rs.core.UriBuilder;
 
@@ -17,24 +19,32 @@ public class DNSProxy {
 
   public static URI resolve(final URI uri) {
     log.info("Resolving URI: {}", uri);
-    return Arrays.stream(HOST.values())
-        .filter(host -> uri.getHost().equalsIgnoreCase(host.docker()))
-        .map(host -> UriBuilder.fromUri(uri)
-            .host("localhost")
-            .port(host.port())
-            .build())
+    return Arrays.stream(Registrar.values())
+        .filter(takeMatching(uri.getHost()))
+        .map(toLocal(uri))
         .findFirst().orElseThrow();
+  }
+
+  private static Predicate<Registrar> takeMatching(final String domain) {
+    return host -> domain.equalsIgnoreCase(host.domain());
+  }
+
+  private static Function<Registrar, URI> toLocal(final URI uri) {
+    return host -> UriBuilder.fromUri(uri)
+        .host("localhost")
+        .port(host.port())
+        .build();
   }
 
   @Getter
   @AllArgsConstructor
   @Accessors(fluent = true)
-  private enum HOST {
+  private enum Registrar {
     DATANODE_ONE(9864, "datanode-one"),
     DATANODE_TWO(9865, "datanode-two"),
     DATANODE_THREE(9866, "datanode-three");
 
     private final int port;
-    private final String docker;
+    private final String domain;
   }
 }

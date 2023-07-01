@@ -27,6 +27,12 @@ docker-compose up -d
 docker exec -it resourcemanager bash 
 ```
 
+- test the cluster (in the playground directory)
+
+```bash
+./mvnw clean spring-boot:run -Dspring-boot.run.arguments="--open=/path/to/file/in/hdfs --to=/path/to/destination/file"
+```
+
 ## Clean up
 
 - Stop the sandbox
