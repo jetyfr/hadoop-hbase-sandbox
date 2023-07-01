@@ -20,12 +20,14 @@ public class DNSProxy {
   public static URI resolve(final URI uri) {
     log.info("Resolving URI: {}", uri);
     return Arrays.stream(Registrar.values())
-        .filter(takeMatching(uri.getHost()))
+        .filter(keepMatchingDomain(uri.getHost()))
         .map(toLocal(uri))
         .findFirst().orElseThrow();
   }
 
-  private static Predicate<Registrar> takeMatching(final String domain) {
+  // --- utils --------------------------------------------------------------------------------------------------------
+
+  private static Predicate<Registrar> keepMatchingDomain(final String domain) {
     return host -> domain.equalsIgnoreCase(host.domain());
   }
 

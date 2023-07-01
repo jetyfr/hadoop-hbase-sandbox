@@ -3,6 +3,7 @@ package fr.diginamic.hadoop.playground.runner;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -28,17 +29,19 @@ public class HadoopRunner implements ApplicationRunner {
   @Override
   public void run(final ApplicationArguments args) throws Exception {
 
-    final var path = from(args, "open");
-    final var destination = Paths.get(from(args, "to"));
+    final var source = from(args, "open");
+    final var target = Paths.get(from(args, "to"));
 
-    client.open(path)
-        .thenApply(file -> DataBufferUtils.write(file, destination))
-        .thenApply(mono -> mono.doOnSuccess(run -> print(destination)))
+    if (!StringUtils.isAnyBlank(source, target.toString())) client.open(source)
+        .thenApply(file -> DataBufferUtils.write(file, target))
+        .thenApply(mono -> mono.doOnSuccess(trigger -> print(target)))
         .thenAccept(Mono::subscribe);
   }
 
+  // --- utils --------------------------------------------------------------------------------------------------------
+
   @SneakyThrows
-  public <T> void print(final T object) {
+  private <T> void print(final T object) {
 
     if (object instanceof JsonNode node) log.info("response [{}]", jackson
         .writerWithDefaultPrettyPrinter()

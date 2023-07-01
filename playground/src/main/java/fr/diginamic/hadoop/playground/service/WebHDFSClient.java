@@ -17,6 +17,7 @@ import reactor.core.publisher.Flux;
 public class WebHDFSClient {
 
   private static final String REQUESST_TEMPLATE = "http://localhost:9870/webhdfs/v1{0}?op={1}";
+
   private final WebClient client;
 
   public CompletableFuture<Flux<DataBuffer>> open(final String path) {
