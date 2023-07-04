@@ -33,11 +33,10 @@ docker compose up -d
 docker exec -it resourcemanager bash 
 ```
 
-- test the cluster (in the playground director, replace **paths**)
-
-```bash
-./mvnw clean spring-boot:run -Dspring-boot.run.arguments="--open=/path/to/file/in/hdfs --to=/path/to/destination/file"
-```
+- test the cluster (on a browser)
+  - [cluster health](http://localhost:9870) - namenode
+  - [yarn](http://localhost:8088) - resourcemanager
+  - [filesystem status](http://localhost:3141/status) - playground
 
 - peek at a running container (replace **CONTAINER_NAME**)
 
