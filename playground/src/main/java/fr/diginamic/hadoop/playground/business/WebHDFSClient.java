@@ -24,7 +24,7 @@ public class WebHDFSClient {
 
   public Flux<DataBuffer> open(final String path, final String file) {
 
-    final Path resource = Path.of(path, file);
+    final var resource = Path.of(path, file).toString();
 
     log.info("openning [{}]", resource);
 

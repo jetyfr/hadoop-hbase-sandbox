@@ -15,15 +15,15 @@ public class HadoopApi {
   private final HadoopService service;
 
   @GetMapping("/open")
-  public Mono<Void> open(
-      @RequestParam(required = false) final String path,
+  public Mono<String> open(
+      @RequestParam(required = false, defaultValue = "") final String path,
       @RequestParam final String file) {
 
     return service.open(path, file);
   }
 
   @GetMapping(value = "/status", produces = "application/json")
-  public Mono<String> status(@RequestParam(required = false) final String path) {
+  public Mono<String> status(@RequestParam(required = false, defaultValue = "") final String path) {
     return service.status(path);
   }
 }

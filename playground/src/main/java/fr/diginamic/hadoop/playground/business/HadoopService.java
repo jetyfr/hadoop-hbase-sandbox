@@ -6,18 +6,23 @@ import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HadoopService {
 
   private final WebHDFSClient client;
 
-  public Mono<Void> open(final String path, final String file) {
-    return DataBufferUtils.write(
-        client.open(path, file),
-        Path.of("output", file));
+  public Mono<String> open(final String path, final String file) {
+    return DataBufferUtils
+        .write(client.open(path, file), Path.of("output", file))
+        .thenReturn("operation successful")
+        // order is important !?
+        .doOnError(e -> log.error("error", e))
+        .onErrorReturn("operation failed");
   }
 
   public Mono<String> status(final String path) {
