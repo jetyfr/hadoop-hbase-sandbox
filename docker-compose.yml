@@ -1,6 +1,18 @@
 version: "test"
 
 services:
+  playground:
+    image: playground/hadoop:latest
+    hostname: playground
+    container_name: playground
+    depends_on:
+      - namenode
+    ports:
+      - 3141:8080
+    volumes:
+      - ./playground/target/playground.jar:/playground.jar
+      - ./output:/output
+
   namenode:
     image: sandbox/hadoop:latest
     hostname: namenode

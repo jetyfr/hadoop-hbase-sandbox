@@ -1,0 +1,5 @@
+FROM eclipse-temurin:11-jre-alpine
+
+RUN mkdir /output
+
+ENTRYPOINT [ "java", "-jar", "playground.jar" ]
