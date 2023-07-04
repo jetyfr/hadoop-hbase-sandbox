@@ -6,10 +6,8 @@ import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HadoopService {
@@ -21,7 +19,6 @@ public class HadoopService {
         .write(client.open(path, file), Path.of("output", file))
         .thenReturn("operation successful")
         // order is important !?
-        .doOnError(e -> log.error("error", e))
         .onErrorReturn("operation failed");
   }
 

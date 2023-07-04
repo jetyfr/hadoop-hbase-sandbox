@@ -30,13 +30,15 @@ public class WebHDFSClient {
 
     return client.get()
         .uri(format(OPERATION_URI, resource, "OPEN"))
-        .retrieve().bodyToFlux(DataBuffer.class);
+        .retrieve().bodyToFlux(DataBuffer.class)
+        .doOnError(e -> log.error("error", e));
   }
 
   public Mono<String> status(final String path) {
     log.info("getting status of [{}]", path);
     return client.get()
         .uri(format(OPERATION_URI, path, "LISTSTATUS"))
-        .retrieve().bodyToMono(String.class);
+        .retrieve().bodyToMono(String.class)
+        .doOnError(e -> log.error("error", e));
   }
 }
