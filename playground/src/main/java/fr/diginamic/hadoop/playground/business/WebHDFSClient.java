@@ -2,7 +2,7 @@ package fr.diginamic.hadoop.playground.business;
 
 import static java.text.MessageFormat.format;
 
-import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class WebHDFSClient {
 
   public Flux<DataBuffer> open(final String path, final String file) {
 
-    final var resource = Path.of(path, file).toString();
+    final String resource = Paths.get(path, file).toString();
 
     log.info("openning [{}]", resource);
 

@@ -1,6 +1,6 @@
 package fr.diginamic.hadoop.playground.business;
 
-import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class HadoopService {
 
   public Mono<String> open(final String path, final String file) {
     return DataBufferUtils
-        .write(client.open(path, file), Path.of("output", file))
+        .write(client.open(path, file), Paths.get("output", file))
         .thenReturn("operation successful")
         // order is important !?
         .onErrorReturn("operation failed");

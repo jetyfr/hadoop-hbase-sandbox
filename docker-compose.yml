@@ -9,6 +9,8 @@ services:
       - namenode
     ports:
       - 3141:8080
+    environment:
+      - SPRING_PROFILES_ACTIVE=web
     volumes:
       - ./playground/target/playground.jar:/playground.jar
       - ./output:/output
@@ -78,7 +80,7 @@ services:
     volumes:
       - ./scripts:/opt/hadoop/scripts
       - ./samples:/opt/hadoop/samples
-      - ./jars:/opt/hadoop/jars
+      - ./playground/target/playground.jar:/opt/hadoop/jars/playground.jar
 
   nodemanager:
     image: sandbox/hadoop:latest
