@@ -17,8 +17,7 @@ sandbox project for diginamic classes on hadoop
 - build required images (in the root directory)
 
 ```bash
-docker build -t sandbox/hadoop:latest -f ./Dockerfile.hadoop . && \
-docker build -t playground/hadoop:latest -f ./Dockerfile.playground .
+make cluster
 ```
 
 - Start the cluster (in the root directory, **requires formatting the namenode on the first run**, cf. [compose](./docker-compose.yml))
@@ -71,10 +70,10 @@ hdfs dfs -cat /output/part-r-00000
 - Stop the sandbox (in the root directory)
 
 ```bash
-docker compose down
+docker compose stop
 ```
 
-- Delete the volumes (in the root directory, **will require formatting the namenode**, cf. [compose](./docker-compose.yml))
+- Delete containers and volumes (in the root directory, **will require formatting the namenode**, cf. [compose](./docker-compose.yml))
 
 ```bash
 docker compose down -v

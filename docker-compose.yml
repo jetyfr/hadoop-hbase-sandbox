@@ -5,8 +5,6 @@ services:
     image: playground/hadoop:latest
     hostname: playground
     container_name: playground
-    depends_on:
-      - namenode
     ports:
       - 3141:8080
     environment:
@@ -100,9 +98,68 @@ services:
     volumes:
       - timelineserver:/opt/hadoop/yarn/timeline
 
+  zoo-master:
+    image: zookeeper:latest
+    restart: always
+    hostname: zoo-master
+    container_name: zoo-master
+    ports:
+      - 2181:2181
+      - 2888:2888
+      - 3888:3888
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zoo-master:2888:3888;2181 server.2=zoo-fallback:2888:3888;2181
+    volumes:
+      - zoo-master:/data
+    
+
+  zoo-fallback:
+    image: zookeeper:latest
+    restart: always
+    hostname: zoo-fallback
+    container_name: zoo-fallback
+    ports:
+      - 2182:2181
+      - 2889:2888
+      - 3889:3888
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zoo-master:2888:3888;2181 server.2=zoo-fallback:2888:3888;2181
+    volumes:
+      - zoo-fallback:/data
+
+  hbase-master:
+    image: sandbox/hbase:latest
+    hostname: hbase-master
+    container_name: hbase-master
+    depends_on:
+      - zoo-master
+      - zoo-fallback
+    command: ["hbase", "master", "start"]
+    ports:
+      - 16000:16000
+      - 16010:16010
+
+  hbase-region:
+    image: sandbox/hbase:latest
+    hostname: hbase-region
+    container_name: hbase-region
+    depends_on:
+      - hbase-master
+    command: ["hbase", "regionserver", "start"]
+    ports:
+      - 16020:16020
+      - 16030:16030
+    env_file:
+      - ./config
+      
+
 volumes:
   namenode:
   datanode-one:
   datanode-two:
   datanode-three:
   timelineserver:
+  zoo-master:
+  zoo-fallback:
