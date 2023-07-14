@@ -10,6 +10,6 @@
   </property>
   <property>
     <name>hbase.zookeeper.quorum</name>
-    <value>zoo-master,zoo-fallback</value>
+    <value>zoo-master,zoo-fallback,zoo-slave</value>
   </property>
 </configuration>

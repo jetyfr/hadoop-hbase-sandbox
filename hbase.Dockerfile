@@ -4,19 +4,17 @@ ENV HBASE_VERSION 2.5.5
 ENV HBASE_URL https://downloads.apache.org/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz
 
 # install
+RUN mkdir -p /opt/hbase/logs
+
 RUN set -x \
   && curl -fSL "$HBASE_URL" -o /tmp/hbase.tar.gz \
   && curl -fSL "$HBASE_URL.asc" -o /tmp/hbase.tar.gz.asc \
-  && tar -xvf /tmp/hbase.tar.gz -C /opt/ \
-  && rm /tmp/hbase.tar.gz*
+  && tar --strip-components=1 -zxvf /tmp/hbase.tar.gz -C /opt/hbase \
+  && rm -r -f /tmp/*hbase*
 
 # configuration
-RUN ln -s /opt/hbase-$HBASE_VERSION/conf /opt/hbase
-
-RUN mkdir /opt/hbase-$HBASE_VERSION/logs
-
-ENV HBASE_CONF_DIR /opt/hbase
-ENV HBASE_HOME /opt/hbase-$HBASE_VERSION
+ENV HBASE_HOME /opt/hbase
+ENV HBASE_CONF_DIR /opt/hbase/conf
 ENV PATH $HBASE_HOME/bin/:$PATH
 
 COPY hbase-site.xml /opt/hbase/hbase-site.xml

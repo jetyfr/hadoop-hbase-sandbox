@@ -17,7 +17,7 @@ services:
     image: sandbox/hadoop:latest
     hostname: namenode
     container_name: namenode
-    command: ["hdfs", "namenode"]
+    command: [ "hdfs", "namenode" ]
     ports:
       - 9870:9870
       - 8020:8020 # required to acces hdfs from the host
@@ -34,7 +34,7 @@ services:
     image: sandbox/hadoop:latest
     hostname: datanode-one
     container_name: datanode-one
-    command: ["hdfs", "datanode"]
+    command: [ "hdfs", "datanode" ]
     ports:
       - 9864:9864
     env_file:
@@ -46,7 +46,7 @@ services:
     image: sandbox/hadoop:latest
     hostname: datanode-two
     container_name: datanode-two
-    command: ["hdfs", "datanode"]
+    command: [ "hdfs", "datanode" ]
     ports:
       - 9865:9864
     env_file:
@@ -58,7 +58,7 @@ services:
     image: sandbox/hadoop:latest
     hostname: datanode-three
     container_name: datanode-three
-    command: ["hdfs", "datanode"]
+    command: [ "hdfs", "datanode" ]
     ports:
       - 9866:9864
     env_file:
@@ -70,7 +70,7 @@ services:
     image: sandbox/hadoop:latest
     hostname: resourcemanager
     container_name: resourcemanager
-    command: ["yarn", "resourcemanager"]
+    command: [ "yarn", "resourcemanager" ]
     ports:
       - 8088:8088
     env_file:
@@ -84,7 +84,7 @@ services:
     image: sandbox/hadoop:latest
     hostname: nodemanager
     container_name: nodemanager
-    command: ["yarn", "nodemanager"]
+    command: [ "yarn", "nodemanager" ]
     env_file:
       - ./config
 
@@ -92,7 +92,7 @@ services:
     image: sandbox/hadoop:latest
     hostname: timelineserver
     container_name: timelineserver
-    command: ["yarn", "timelineserver"]
+    command: [ "yarn", "timelineserver" ]
     env_file:
       - ./config
     volumes:
@@ -109,25 +109,43 @@ services:
       - 3888:3888
     environment:
       ZOO_MY_ID: 1
-      ZOO_SERVERS: server.1=zoo-master:2888:3888;2181 server.2=zoo-fallback:2888:3888;2181
+      ZOO_SERVERS: server.1=zoo-master:2888:3888;2181 server.2=zoo-fallback:2888:3888;2181 server.3=zoo-slave:2888:3888;2181
     volumes:
       - zoo-master:/data
-    
 
   zoo-fallback:
     image: zookeeper:latest
     restart: always
     hostname: zoo-fallback
     container_name: zoo-fallback
+    depends_on:
+      - zoo-master
     ports:
       - 2182:2181
       - 2889:2888
       - 3889:3888
     environment:
       ZOO_MY_ID: 2
-      ZOO_SERVERS: server.1=zoo-master:2888:3888;2181 server.2=zoo-fallback:2888:3888;2181
+      ZOO_SERVERS: server.1=zoo-master:2888:3888;2181 server.2=zoo-fallback:2888:3888;2181 server.3=zoo-slave:2888:3888;2181
     volumes:
       - zoo-fallback:/data
+
+  zoo-slave:
+    image: zookeeper:latest
+    restart: always
+    hostname: zoo-slave
+    container_name: zoo-slave
+    depends_on:
+      - zoo-fallback
+    ports:
+      - 2183:2181
+      - 2890:2888
+      - 3890:3888
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zoo-master:2888:3888;2181 server.2=zoo-fallback:2888:3888;2181 server.3=zoo-slave:2888:3888;2181
+    volumes:
+      - zoo-slave:/data
 
   hbase-master:
     image: sandbox/hbase:latest
@@ -136,7 +154,8 @@ services:
     depends_on:
       - zoo-master
       - zoo-fallback
-    command: ["hbase", "master", "start"]
+      - zoo-slave
+    command: [ "hbase", "master", "start" ]
     ports:
       - 16000:16000
       - 16010:16010
@@ -147,13 +166,12 @@ services:
     container_name: hbase-region
     depends_on:
       - hbase-master
-    command: ["hbase", "regionserver", "start"]
+    command: [ "hbase", "regionserver", "start" ]
     ports:
       - 16020:16020
       - 16030:16030
     env_file:
       - ./config
-      
 
 volumes:
   namenode:
@@ -163,3 +181,4 @@ volumes:
   timelineserver:
   zoo-master:
   zoo-fallback:
+  zoo-slave:
