@@ -47,19 +47,19 @@ clear && docker container logs CONTAINER_NAME
 docker exec -it resourcemanager bash
 ```
 
-- create a file containing any text
+- create a file containing any text (in the resourcemanager container)
 
 ```bash
 echo "hello world !" > input.txt
 ```
 
-- copy the created file to hdfs
+- copy the created file to hdfs (in the resourcemanager container)
 
 ```bash
 hdfs dfs -put input.txt
 ```
 
-- run wordcount on the added file (should display the result)
+- run wordcount on the added file (in the resourcemanager container, should display the result)
 
 ```bash
 yarn jar archives/playground.jar wordcount /input.txt output && \
