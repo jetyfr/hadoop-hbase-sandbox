@@ -1,20 +1,20 @@
-version: "test"
+version: "sandbox"
 
 services:
   playground:
-    image: sandbox/playground:latest
+    image: playground:sandbox
     hostname: playground
     container_name: playground
+    command: [ "java", "-jar", "/target/playground.jar" ]
     ports:
       - 3141:8080
     environment:
       SPRING_PROFILES_ACTIVE: web
     volumes:
-      - ./playground/target/playground.jar:/playground.jar
-      - ./output:/output
+      - ./playground/target:/target
 
   namenode:
-    image: sandbox/hadoop:latest
+    image: hadoop:sandbox
     hostname: namenode
     container_name: namenode
     command: [ "/opt/hadoop/start-namenode.sh" ]
@@ -23,14 +23,14 @@ services:
       - 8020:8020
     environment:
       ENSURE_NAMENODE_DIR: "/opt/hadoop/dfs/name"
-      ENSURE_NAMENODE_CLUSTERID: "sandbox" # required, needs ENSURE_NAMENODE_DIR to be effective
+      ENSURE_NAMENODE_CLUSTERID: "sandbox"
     env_file:
       - ./config
     volumes:
       - namenode:/opt/hadoop/dfs/name
 
   datanode-one:
-    image: sandbox/hadoop:latest
+    image: hadoop:sandbox
     hostname: datanode-one
     container_name: datanode-one
     command: [ "hdfs", "datanode" ]
@@ -42,7 +42,7 @@ services:
       - datanode-one:/opt/hadoop/dfs/data
 
   datanode-two:
-    image: sandbox/hadoop:latest
+    image: hadoop:sandbox
     hostname: datanode-two
     container_name: datanode-two
     command: [ "hdfs", "datanode" ]
@@ -54,7 +54,7 @@ services:
       - datanode-two:/opt/hadoop/dfs/data
 
   datanode-three:
-    image: sandbox/hadoop:latest
+    image: hadoop:sandbox
     hostname: datanode-three
     container_name: datanode-three
     command: [ "hdfs", "datanode" ]
@@ -66,7 +66,7 @@ services:
       - datanode-three:/opt/hadoop/dfs/data
 
   resourcemanager:
-    image: sandbox/hadoop:latest
+    image: hadoop:sandbox
     hostname: resourcemanager
     container_name: resourcemanager
     command: [ "yarn", "resourcemanager" ]
@@ -75,12 +75,12 @@ services:
     env_file:
       - ./config
     volumes:
-      - ./scripts:/opt/hadoop/scripts
+      - ./output:/opt/hadoop/output
       - ./samples:/opt/hadoop/samples
-      - ./playground/target/playground.jar:/opt/hadoop/jars/playground.jar
+      - ./playground/target:/opt/hadoop/archives
 
   nodemanager:
-    image: sandbox/hadoop:latest
+    image: hadoop:sandbox
     hostname: nodemanager
     container_name: nodemanager
     command: [ "yarn", "nodemanager" ]
@@ -88,7 +88,7 @@ services:
       - ./config
 
   timelineserver:
-    image: sandbox/hadoop:latest
+    image: hadoop:sandbox
     hostname: timelineserver
     container_name: timelineserver
     command: [ "yarn", "timelineserver" ]
@@ -96,10 +96,10 @@ services:
       - ./config
     volumes:
       - timelineserver:/opt/hadoop/yarn/timeline
-
+      
   zoo-one:
-    image: sandbox/zookeeper:latest
-    restart: always
+    image: zookeeper:sandbox
+    restart: unless-stopped
     hostname: zoo-one
     container_name: zoo-one
     ports:
@@ -108,14 +108,14 @@ services:
       - 3888:3888
     environment:
       ZOO_MY_ID: 1
-      ZOO_SERVERS: server.1=zoo-one:2888:3888 server.2=zoo-two:2888:3888 server.3=zoo-three:2888:3888
+      ZOO_SERVERS: server.1=zoo-one:2888:3888;2181 server.2=zoo-two:2888:3888;2181 server.3=zoo-three:2888:3888;2181
       ZOO_DATA_LOG_DIR: /data/log
     volumes:
       - zoo-one:/data
 
   zoo-two:
-    image: sandbox/zookeeper:latest
-    restart: always
+    image: zookeeper:sandbox
+    restart: unless-stopped
     hostname: zoo-two
     container_name: zoo-two
     ports:
@@ -124,14 +124,14 @@ services:
       - 3889:3888
     environment:
       ZOO_MY_ID: 2
-      ZOO_SERVERS: server.1=zoo-one:2888:3888 server.2=zoo-two:2888:3888 server.3=zoo-three:2888:3888
+      ZOO_SERVERS: server.1=zoo-one:2888:3888;2181 server.2=zoo-two:2888:3888;2181 server.3=zoo-three:2888:3888;2181
       ZOO_DATA_LOG_DIR: /data/log
     volumes:
       - zoo-two:/data
 
   zoo-three:
-    image: sandbox/zookeeper:latest
-    restart: always
+    image: zookeeper:sandbox
+    restart: unless-stopped
     hostname: zoo-three
     container_name: zoo-three
     ports:
@@ -140,13 +140,13 @@ services:
       - 3890:3888
     environment:
       ZOO_MY_ID: 3
-      ZOO_SERVERS: server.1=zoo-one:2888:3888 server.2=zoo-two:2888:3888 server.3=zoo-three:2888:3888
+      ZOO_SERVERS: server.1=zoo-one:2888:3888;2181 server.2=zoo-two:2888:3888;2181 server.3=zoo-three:2888:3888;2181
       ZOO_DATA_LOG_DIR: /data/log
     volumes:
       - zoo-three:/data
 
   hbase-master:
-    image: sandbox/hbase:latest
+    image: hbase:sandbox
     hostname: hbase-master
     container_name: hbase-master
     depends_on:
@@ -159,7 +159,7 @@ services:
       - 16010:16010
 
   hbase-region:
-    image: sandbox/hbase:latest
+    image: hbase:sandbox
     hostname: hbase-region
     container_name: hbase-region
     depends_on:

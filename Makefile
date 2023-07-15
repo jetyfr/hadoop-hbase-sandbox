@@ -1,5 +1,5 @@
 cluster:
-	docker build -t sandbox/hadoop:latest -f hadoop.Dockerfile .
-	docker build -t sandbox/playground:latest -f playground.Dockerfile .
-	docker build -t sandbox/hbase:latest -f hbase.Dockerfile .
-	docker build -t sandbox/zookeeper:latest -f zookeeper.Dockerfile .
+	docker build -t hadoop:sandbox -f hadoop.Dockerfile .
+	docker build -t playground:sandbox -f playground.Dockerfile .
+	docker build -t hbase:sandbox -f hbase.Dockerfile .
+	docker build -t zookeeper:sandbox -f zookeeper.Dockerfile .

@@ -1,0 +1,55 @@
+version: "sandbox"
+
+services:
+  zoo-one:
+    image: zookeeper:sandbox
+    restart: unless-stopped
+    hostname: zoo-one
+    container_name: zoo-one
+    ports:
+      - 2181:2181
+      - 2888:2888
+      - 3888:3888
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zoo-one:2888:3888;2181 server.2=zoo-two:2888:3888;2181 server.3=zoo-three:2888:3888;2181
+      ZOO_DATA_LOG_DIR: /data/log
+    volumes:
+      - zoo-one:/data
+
+  zoo-two:
+    image: zookeeper:sandbox
+    restart: unless-stopped
+    hostname: zoo-two
+    container_name: zoo-two
+    ports:
+      - 2182:2181
+      - 2889:2888
+      - 3889:3888
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zoo-one:2888:3888;2181 server.2=zoo-two:2888:3888;2181 server.3=zoo-three:2888:3888;2181
+      ZOO_DATA_LOG_DIR: /data/log
+    volumes:
+      - zoo-two:/data
+
+  zoo-three:
+    image: zookeeper:sandbox
+    restart: unless-stopped
+    hostname: zoo-three
+    container_name: zoo-three
+    ports:
+      - 2183:2181
+      - 2890:2888
+      - 3890:3888
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zoo-one:2888:3888;2181 server.2=zoo-two:2888:3888;2181 server.3=zoo-three:2888:3888;2181
+      ZOO_DATA_LOG_DIR: /data/log
+    volumes:
+      - zoo-three:/data
+
+volumes:
+  zoo-one:
+  zoo-two:
+  zoo-three:

@@ -19,12 +19,15 @@ ENV HBASE_CONF_DIR /etc/hbase
 ENV PATH $HBASE_HOME/bin/:$PATH
 
 COPY hbase-site.xml /etc/hbase
+COPY hbase-env.sh /etc/hbase
 
 # access
 RUN groupadd --gid 1000 hbase
 RUN useradd --uid 1000 hbase --gid 100 --home /opt/hbase
 RUN chmod 755 /opt/hbase
 RUN echo "hbase ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-RUN chown hbase /opt
+RUN chown -R hbase /opt
 
 USER hbase
+
+WORKDIR /opt/hbase
