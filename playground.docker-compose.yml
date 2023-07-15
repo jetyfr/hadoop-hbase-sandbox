@@ -5,12 +5,13 @@ services:
     image: sandbox/playground:latest
     hostname: playground
     container_name: playground
+    command: [ "java", "-jar", "/target/playground.jar" ]
     ports:
       - 3141:8080
     environment:
       SPRING_PROFILES_ACTIVE: web
     volumes:
-      - ./playground/target/playground.jar:/playground.jar
+      - ./playground/target:/target
       - ./output:/output
 
   namenode:
@@ -97,84 +98,9 @@ services:
     volumes:
       - timelineserver:/opt/hadoop/yarn/timeline
 
-  zoo-one:
-    image: sandbox/zookeeper:latest
-    restart: always
-    hostname: zoo-one
-    container_name: zoo-one
-    ports:
-      - 2181:2181
-      - 2888:2888
-      - 3888:3888
-    environment:
-      ZOO_MY_ID: 1
-      ZOO_SERVERS: server.1=zoo-one:2888:3888 server.2=zoo-two:2888:3888 server.3=zoo-three:2888:3888
-      ZOO_DATA_LOG_DIR: /data/log
-    volumes:
-      - zoo-one:/data
-
-  zoo-two:
-    image: sandbox/zookeeper:latest
-    restart: always
-    hostname: zoo-two
-    container_name: zoo-two
-    ports:
-      - 2182:2181
-      - 2889:2888
-      - 3889:3888
-    environment:
-      ZOO_MY_ID: 2
-      ZOO_SERVERS: server.1=zoo-one:2888:3888 server.2=zoo-two:2888:3888 server.3=zoo-three:2888:3888
-      ZOO_DATA_LOG_DIR: /data/log
-    volumes:
-      - zoo-two:/data
-
-  zoo-three:
-    image: sandbox/zookeeper:latest
-    restart: always
-    hostname: zoo-three
-    container_name: zoo-three
-    ports:
-      - 2183:2181
-      - 2890:2888
-      - 3890:3888
-    environment:
-      ZOO_MY_ID: 3
-      ZOO_SERVERS: server.1=zoo-one:2888:3888 server.2=zoo-two:2888:3888 server.3=zoo-three:2888:3888
-      ZOO_DATA_LOG_DIR: /data/log
-    volumes:
-      - zoo-three:/data
-
-  hbase-master:
-    image: sandbox/hbase:latest
-    hostname: hbase-master
-    container_name: hbase-master
-    depends_on:
-      - zoo-one
-      - zoo-two
-      - zoo-three
-    command: [ "hbase", "master", "start" ]
-    ports:
-      - 16000:16000
-      - 16010:16010
-
-  hbase-region:
-    image: sandbox/hbase:latest
-    hostname: hbase-region
-    container_name: hbase-region
-    depends_on:
-      - hbase-master
-    command: [ "hbase", "regionserver", "start" ]
-    ports:
-      - 16020:16020
-      - 16030:16030
-
 volumes:
   namenode:
   timelineserver:
   datanode-one:
   datanode-two:
   datanode-three:
-  zoo-one:
-  zoo-two:
-  zoo-three:

@@ -20,10 +20,10 @@ sandbox project for diginamic classes on hadoop
 make cluster
 ```
 
-- Start the cluster (in the root directory, **requires formatting the namenode on the first run**, cf. [compose](./docker-compose.yml))
+- Start the cluster (in the root directory, add "-d" to run in background)
 
 ```bash
-docker compose up -d
+docker compose up
 ```
 
 ## Test the cluster
@@ -38,6 +38,8 @@ clear && docker container logs CONTAINER_NAME
   - [cluster health](http://localhost:9870) - namenode
   - [yarn](http://localhost:8088) - resourcemanager
   - [filesystem status](http://localhost:3141/status) - playground
+
+### mapreduce
 
 - create a file in samples folder containing any text (in the root directory, exemple bellow)
 
@@ -65,6 +67,8 @@ yarn jar jars/playground.jar wordcount /input.txt /output && \
 hdfs dfs -cat /output/part-r-00000
 ```
 
+### hbase
+
 ## Clean up
 
 - Stop the sandbox (in the root directory)
@@ -73,7 +77,7 @@ hdfs dfs -cat /output/part-r-00000
 docker compose stop
 ```
 
-- Delete containers and volumes (in the root directory, **will require formatting the namenode**, cf. [compose](./docker-compose.yml))
+- Delete containers and volumes (in the root director)
 
 ```bash
 docker compose down -v

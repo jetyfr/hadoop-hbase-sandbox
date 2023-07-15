@@ -16,7 +16,7 @@ public class HadoopService {
 
   public Mono<String> open(final String path, final String file) {
     return DataBufferUtils
-        .write(client.open(path, file), Paths.get("output", file))
+        .write(client.open(path, file), Paths.get("/output", file))
         .thenReturn("operation successful")
         // order is important !?
         .onErrorReturn("operation failed");
