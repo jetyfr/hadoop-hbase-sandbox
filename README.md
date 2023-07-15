@@ -39,13 +39,7 @@ clear && docker container logs CONTAINER_NAME
   - [yarn](http://localhost:8088) - resourcemanager
   - [filesystem status](http://localhost:3141/status) - playground
 
-### mapreduce
-
-- create a file in samples folder containing any text (in the root directory, exemple bellow)
-
-```bash
-echo "hello world !" > samples/input.txt
-```
+### MapReduce
 
 - Connect to the cluster (most useful volumes are mounted in the resourcemanager container)
 
@@ -53,31 +47,36 @@ echo "hello world !" > samples/input.txt
 docker exec -it resourcemanager bash
 ```
 
-- copy the created file to hdfs (should display input.txt twice)
+- create a file containing any text
 
 ```bash
-ls -la samples && hdfs dfs -put samples/input.txt / && \
-hdfs dfs -ls /
+echo "hello world !" > input.txt
+```
+
+- copy the created file to hdfs
+
+```bash
+hdfs dfs -put input.txt
 ```
 
 - run wordcount on the added file (should display the result)
 
 ```bash
-yarn jar jars/playground.jar wordcount /input.txt /output && \
-hdfs dfs -cat /output/part-r-00000
+yarn jar archives/playground.jar wordcount /input.txt output && \
+hdfs dfs -cat output/part-r-00000
 ```
 
-### hbase
+### HBase
 
 ## Clean up
 
-- Stop the sandbox (in the root directory)
+- Stop the cluster (in the root directory)
 
 ```bash
 docker compose stop
 ```
 
-- Delete containers and volumes (in the root director)
+- reset the cluster (in the root director)
 
 ```bash
 docker compose down -v
