@@ -1,5 +1,7 @@
 version: "sandbox"
 
+# start order : zoos -> namenode -> datanodes -> resourcemanager -> nodemanager/timelineserver/hbase-master -> hbase-region
+
 services:
   playground:
     image: playground:sandbox
@@ -20,7 +22,6 @@ services:
     command: [ "/opt/hadoop/start-namenode.sh" ]
     ports:
       - 9870:9870
-      - 8020:8020
     environment:
       ENSURE_NAMENODE_DIR: "/opt/hadoop/dfs/name"
       ENSURE_NAMENODE_CLUSTERID: "sandbox"
@@ -34,8 +35,6 @@ services:
     hostname: datanode-one
     container_name: datanode-one
     command: [ "hdfs", "datanode" ]
-    ports:
-      - 9864:9864
     env_file:
       - ./config
     volumes:
@@ -46,8 +45,6 @@ services:
     hostname: datanode-two
     container_name: datanode-two
     command: [ "hdfs", "datanode" ]
-    ports:
-      - 9865:9864
     env_file:
       - ./config
     volumes:
@@ -58,8 +55,6 @@ services:
     hostname: datanode-three
     container_name: datanode-three
     command: [ "hdfs", "datanode" ]
-    ports:
-      - 9866:9864
     env_file:
       - ./config
     volumes:
@@ -102,10 +97,6 @@ services:
     restart: unless-stopped
     hostname: zoo-one
     container_name: zoo-one
-    ports:
-      - 2181:2181
-      - 2888:2888
-      - 3888:3888
     environment:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=zoo-one:2888:3888;2181 server.2=zoo-two:2888:3888;2181 server.3=zoo-three:2888:3888;2181
@@ -118,10 +109,6 @@ services:
     restart: unless-stopped
     hostname: zoo-two
     container_name: zoo-two
-    ports:
-      - 2182:2181
-      - 2889:2888
-      - 3889:3888
     environment:
       ZOO_MY_ID: 2
       ZOO_SERVERS: server.1=zoo-one:2888:3888;2181 server.2=zoo-two:2888:3888;2181 server.3=zoo-three:2888:3888;2181
@@ -134,10 +121,6 @@ services:
     restart: unless-stopped
     hostname: zoo-three
     container_name: zoo-three
-    ports:
-      - 2183:2181
-      - 2890:2888
-      - 3890:3888
     environment:
       ZOO_MY_ID: 3
       ZOO_SERVERS: server.1=zoo-one:2888:3888;2181 server.2=zoo-two:2888:3888;2181 server.3=zoo-three:2888:3888;2181
@@ -149,24 +132,16 @@ services:
     image: hbase:sandbox
     hostname: hbase-master
     container_name: hbase-master
-    depends_on:
-      - zoo-one
-      - zoo-two
-      - zoo-three
     command: [ "hbase", "master", "start" ]
     ports:
-      - 16000:16000
       - 16010:16010
 
   hbase-region:
     image: hbase:sandbox
     hostname: hbase-region
     container_name: hbase-region
-    depends_on:
-      - hbase-master
     command: [ "hbase", "regionserver", "start" ]
     ports:
-      - 16020:16020
       - 16030:16030
 
 volumes:
