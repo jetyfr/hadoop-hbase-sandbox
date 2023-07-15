@@ -1,4 +1,4 @@
-version: "test"
+version: "sandbox"
 
 services:
   playground:
@@ -12,7 +12,6 @@ services:
       SPRING_PROFILES_ACTIVE: web
     volumes:
       - ./playground/target:/target
-      - ./output:/output
 
   namenode:
     image: sandbox/hadoop:latest
@@ -24,7 +23,7 @@ services:
       - 8020:8020
     environment:
       ENSURE_NAMENODE_DIR: "/opt/hadoop/dfs/name"
-      ENSURE_NAMENODE_CLUSTERID: "sandbox" # required, needs ENSURE_NAMENODE_DIR to be effective
+      ENSURE_NAMENODE_CLUSTERID: "sandbox"
     env_file:
       - ./config
     volumes:
@@ -76,9 +75,9 @@ services:
     env_file:
       - ./config
     volumes:
-      - ./scripts:/opt/hadoop/scripts
+      - ./output:/opt/hadoop/output
       - ./samples:/opt/hadoop/samples
-      - ./playground/target/playground.jar:/opt/hadoop/jars/playground.jar
+      - ./playground/target:/opt/hadoop/archives
 
   nodemanager:
     image: sandbox/hadoop:latest

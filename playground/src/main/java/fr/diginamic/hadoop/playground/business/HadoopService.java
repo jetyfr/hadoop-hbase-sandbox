@@ -1,11 +1,10 @@
 package fr.diginamic.hadoop.playground.business;
 
-import java.nio.file.Paths;
-
-import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -14,12 +13,8 @@ public class HadoopService {
 
   private final WebHDFSClient client;
 
-  public Mono<String> open(final String path, final String file) {
-    return DataBufferUtils
-        .write(client.open(path, file), Paths.get("/output", file))
-        .thenReturn("operation successful")
-        // order is important !?
-        .onErrorReturn("operation failed");
+  public Flux<DataBuffer> open(final String path, final String file) {
+    return client.open(path, file);
   }
 
   public Mono<String> status(final String path) {

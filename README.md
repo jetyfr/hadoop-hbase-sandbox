@@ -50,7 +50,7 @@ echo "hello world !" > samples/input.txt
 - Connect to the cluster (most useful volumes are mounted in the resourcemanager container)
 
 ```bash
-docker exec -it resourcemanager bash 
+docker exec -it resourcemanager bash
 ```
 
 - copy the created file to hdfs (should display input.txt twice)
