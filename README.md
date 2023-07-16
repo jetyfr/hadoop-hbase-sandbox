@@ -1,6 +1,6 @@
 # Hadoop Cluster
 
-sandbox project deploying a hadoop cluster with docker (fully distributed mode with zookeeper and hbase), the spring boot application can be used to interact with the cluster.
+sandbox project deploying a hadoop cluster with docker (fully distributed mode with zookeeper and hbase)
 
 ## Prerequisites
 
