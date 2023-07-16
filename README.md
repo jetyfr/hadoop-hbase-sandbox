@@ -26,15 +26,15 @@ make cluster
 make up
 ```
 
-## Test the cluster
+## Test the cluster (requires the cluster to be up and running)
 
-- check status of the cluster (in the root directory)
+- in the root directory
 
 ```bash
 make status
 ```
 
-- test in a browser
+- in a browser
   - [cluster health](http://localhost:9870) - namenode
   - [yarn](http://localhost:8088) - resourcemanager
   - [swagger](http://localhost:7080/swagger) - playground
