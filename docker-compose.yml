@@ -1,6 +1,6 @@
 version: "sandbox"
 
-# start order : zoos -> namenode -> datanodes -> resourcemanager -> nodemanager/timelineserver/hbase-master -> hbase-region
+# start order : namenode/zoos -> datanodes -> resourcemanager -> nodemanager/timelineserver/hbase-master -> hbase-region
 
 services:
   playground:
@@ -9,7 +9,7 @@ services:
     container_name: playground
     command: [ "java", "-jar", "/target/playground.jar" ]
     ports:
-      - 3141:8080
+      - 7080:8080
     environment:
       SPRING_PROFILES_ACTIVE: web
     volumes:
@@ -19,52 +19,69 @@ services:
     image: hadoop:sandbox
     hostname: namenode
     container_name: namenode
-    command: [ "/opt/hadoop/start-namenode.sh" ]
+    command: [ "/start-namenode.sh" ]
     ports:
       - 9870:9870
+      - 8020:8020
     environment:
-      ENSURE_NAMENODE_DIR: "/opt/hadoop/dfs/name"
+      ENSURE_NAMENODE_DIR: "/data/name"
       ENSURE_NAMENODE_CLUSTERID: "sandbox"
     env_file:
       - ./config
     volumes:
-      - namenode:/opt/hadoop/dfs/name
+      - namenode:/data
 
   datanode-one:
     image: hadoop:sandbox
     hostname: datanode-one
     container_name: datanode-one
     command: [ "hdfs", "datanode" ]
+    depends_on:
+      - namenode
+    ports:
+      - 9864:9864
     env_file:
       - ./config
     volumes:
-      - datanode-one:/opt/hadoop/dfs/data
+      - datanode-one:/data
 
   datanode-two:
     image: hadoop:sandbox
     hostname: datanode-two
     container_name: datanode-two
+    depends_on:
+      - namenode
     command: [ "hdfs", "datanode" ]
+    ports:
+      - 9865:9864
     env_file:
       - ./config
     volumes:
-      - datanode-two:/opt/hadoop/dfs/data
+      - datanode-two:/data
 
   datanode-three:
     image: hadoop:sandbox
     hostname: datanode-three
     container_name: datanode-three
     command: [ "hdfs", "datanode" ]
+    depends_on:
+      - namenode
+    ports:
+      - 9866:9864
     env_file:
       - ./config
     volumes:
-      - datanode-three:/opt/hadoop/dfs/data
+      - datanode-three:/data
 
   resourcemanager:
     image: hadoop:sandbox
     hostname: resourcemanager
     container_name: resourcemanager
     command: [ "yarn", "resourcemanager" ]
+    depends_on:
+      - datanode-one
+      - datanode-two
+      - datanode-three
     ports:
       - 8088:8088
     env_file:
@@ -73,83 +90,129 @@ services:
       - ./output:/opt/hadoop/output
       - ./samples:/opt/hadoop/samples
       - ./playground/target:/opt/hadoop/archives
+      - resourcemanager:/data
 
   nodemanager:
     image: hadoop:sandbox
     hostname: nodemanager
     container_name: nodemanager
     command: [ "yarn", "nodemanager" ]
+    depends_on:
+      - resourcemanager
     env_file:
       - ./config
+    volumes:
+      - nodemanager:/data
 
   timelineserver:
     image: hadoop:sandbox
     hostname: timelineserver
     container_name: timelineserver
+    depends_on:
+      - resourcemanager
     command: [ "yarn", "timelineserver" ]
     env_file:
       - ./config
     volumes:
-      - timelineserver:/opt/hadoop/yarn/timeline
+      - timelineserver:/data
       
   zoo-one:
-    image: zookeeper:sandbox
+    image: zookeeper:latest
     restart: unless-stopped
     hostname: zoo-one
     container_name: zoo-one
+    ports:
+      - 2181:2181
+      - 2888:2888
+      - 3888:3888
+      - 4080:8080
     environment:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=zoo-one:2888:3888;2181 server.2=zoo-two:2888:3888;2181 server.3=zoo-three:2888:3888;2181
-      ZOO_DATA_LOG_DIR: /data/log
     volumes:
-      - zoo-one:/data
+      - zoo-one-data:/data
+      - zoo-one-datalog:/datalog
+      - zoo-one-logs:/logs
 
   zoo-two:
-    image: zookeeper:sandbox
+    image: zookeeper:latest
     restart: unless-stopped
     hostname: zoo-two
     container_name: zoo-two
+    ports:
+      - 2182:2181
+      - 2889:2888
+      - 3889:3888
+      - 4081:8080
     environment:
       ZOO_MY_ID: 2
       ZOO_SERVERS: server.1=zoo-one:2888:3888;2181 server.2=zoo-two:2888:3888;2181 server.3=zoo-three:2888:3888;2181
-      ZOO_DATA_LOG_DIR: /data/log
     volumes:
-      - zoo-two:/data
+      - zoo-two-data:/data
+      - zoo-two-datalog:/datalog
+      - zoo-two-logs:/logs
 
   zoo-three:
-    image: zookeeper:sandbox
+    image: zookeeper:latest
     restart: unless-stopped
     hostname: zoo-three
     container_name: zoo-three
+    ports:
+      - 2183:2181
+      - 2890:2888
+      - 3890:3888
+      - 4082:8080
     environment:
       ZOO_MY_ID: 3
       ZOO_SERVERS: server.1=zoo-one:2888:3888;2181 server.2=zoo-two:2888:3888;2181 server.3=zoo-three:2888:3888;2181
-      ZOO_DATA_LOG_DIR: /data/log
     volumes:
-      - zoo-three:/data
+      - zoo-three-data:/data
+      - zoo-three-datalog:/datalog
+      - zoo-three-logs:/logs
 
   hbase-master:
     image: hbase:sandbox
     hostname: hbase-master
     container_name: hbase-master
+    depends_on:
+      - zoo-one
+      - zoo-two
+      - zoo-three
+      - timelineserver
     command: [ "hbase", "master", "start" ]
     ports:
+      - 16000:16000
       - 16010:16010
+      - 5080:8080
+      - 5085:8085
 
   hbase-region:
     image: hbase:sandbox
     hostname: hbase-region
     container_name: hbase-region
+    depends_on:
+      - hbase-master
     command: [ "hbase", "regionserver", "start" ]
     ports:
+      - 16020:16020
       - 16030:16030
+      - 5081:8080
+      - 5086:8085
 
 volumes:
   namenode:
+  resourcemanager:
+  nodemanager:
   timelineserver:
   datanode-one:
   datanode-two:
   datanode-three:
-  zoo-one:
-  zoo-two:
-  zoo-three:
+  zoo-one-data:
+  zoo-one-datalog:
+  zoo-one-logs:
+  zoo-two-data:
+  zoo-two-datalog:
+  zoo-two-logs:
+  zoo-three-data:
+  zoo-three-datalog:
+  zoo-three-logs:

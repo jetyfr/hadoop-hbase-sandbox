@@ -1,7 +1,5 @@
 #! /bin/bash
 
-ls -l -a /opt/hadoop/dfs
-
 if [ ! -n "$ENSURE_NAMENODE_CLUSTERID" ] || [ ! -n "$ENSURE_NAMENODE_DIR" ]; then
   echo "please set ENSURE_NAMENODE_CLUSTERID and ENSURE_NAMENODE_DIR"
   exit 1

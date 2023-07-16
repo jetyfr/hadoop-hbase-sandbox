@@ -23,7 +23,7 @@ make cluster
 - Start the cluster (in the root directory, add "-d" to run in background)
 
 ```bash
-docker compose up
+make up
 ```
 
 ## Test the cluster
@@ -31,7 +31,7 @@ docker compose up
 - peek at a running container's logs (replace **CONTAINER_NAME**)
 
 ```bash
-clear && docker container logs CONTAINER_NAME
+docker container logs CONTAINER_NAME
 ```
 
 - test in a browser
@@ -73,11 +73,11 @@ hdfs dfs -cat output/part-r-00000
 - Stop the cluster (in the root directory)
 
 ```bash
-docker compose stop
+make stop
 ```
 
 - reset the cluster (in the root director)
 
 ```bash
-docker compose down -v
+make reset
 ```

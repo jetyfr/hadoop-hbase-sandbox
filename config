@@ -3,8 +3,8 @@ CORE-SITE.XML_fs.defaultFS=hdfs://namenode
 
 HDFS-SITE.XML_dfs.replication=2
 HDFS-SITE.XML_dfs.namenode.rpc-address=namenode:8020
-HDFS-SITE.XML_dfs.namenode.name.dir=/opt/hadoop/dfs/name
-HDFS-SITE.XML_dfs.datanode.data.dir=/opt/hadoop/dfs/data
+HDFS-SITE.XML_dfs.namenode.name.dir=/data/name
+HDFS-SITE.XML_dfs.datanode.data.dir=/data/storage
 HDFS-SITE.XML_dfs.permissions.enabled=false
 HDFS-SITE.XML_dfs.webhdfs.enabled=true
 
@@ -18,7 +18,7 @@ YARN-SITE.XML_yarn.resourcemanager.system-metrics-publisher.enabled=true
 YARN-SITE.XML_yarn.timeline-service.enabled=true
 YARN-SITE.XML_yarn.timeline-service.generic-application-history.enabled=true
 YARN-SITE.XML_yarn.timeline-service.hostname=timelineserver
-YARN-SITE.XML_yarn.timeline-service.leveldb-timeline-store.path=/opt/hadoop/yarn/timeline
+YARN-SITE.XML_yarn.timeline-service.leveldb-timeline-store.path=/data/timeline
 YARN-SITE.XML_yarn.nodemanager.pmem-check-enabled=false
 YARN-SITE.XML_yarn.nodemanager.delete.debug-delay-sec=600
 YARN-SITE.XML_yarn.nodemanager.vmem-check-enabled=false
