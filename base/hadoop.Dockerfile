@@ -1,6 +1,6 @@
 FROM apache/hadoop:3
 
-COPY /start-namenode.sh /
+COPY start-namenode.sh /
 RUN sudo chmod a+x /start-namenode.sh
 
 WORKDIR /data

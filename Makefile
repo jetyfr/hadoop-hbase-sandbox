@@ -1,8 +1,9 @@
 cluster:
 	clear
-	docker build -t hadoop:sandbox -f hadoop.Dockerfile .
-	docker build -t playground:sandbox -f playground.Dockerfile .
-	docker build -t hbase:sandbox -f hbase.Dockerfile .
+	docker image prune -f
+	docker build -t hadoop:sandbox -f base/hadoop.Dockerfile base
+	docker build -t playground:sandbox -f base/playground.Dockerfile base
+	docker build -t hbase:sandbox -f base/hbase.Dockerfile base
 
 up:
 	clear && docker compose up -d --remove-orphans
@@ -21,3 +22,6 @@ down:
 
 reset:
 	clear && docker compose down -v
+
+status:
+	clear && docker images && docker volume ls && docker ps -a

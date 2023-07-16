@@ -27,7 +27,7 @@ services:
       ENSURE_NAMENODE_DIR: "/data/name"
       ENSURE_NAMENODE_CLUSTERID: "sandbox"
     env_file:
-      - ./config
+      - ./base/hadoop.env
     volumes:
       - namenode:/data
 
@@ -41,7 +41,7 @@ services:
     ports:
       - 9864:9864
     env_file:
-      - ./config
+      - ./base/hadoop.env
     volumes:
       - datanode-one:/data
 
@@ -55,7 +55,7 @@ services:
     ports:
       - 9865:9864
     env_file:
-      - ./config
+      - ./base/hadoop.env
     volumes:
       - datanode-two:/data
 
@@ -69,7 +69,7 @@ services:
     ports:
       - 9866:9864
     env_file:
-      - ./config
+      - ./base/hadoop.env
     volumes:
       - datanode-three:/data
 
@@ -85,7 +85,7 @@ services:
     ports:
       - 8088:8088
     env_file:
-      - ./config
+      - ./base/hadoop.env
     volumes:
       - ./output:/opt/hadoop/output
       - ./samples:/opt/hadoop/samples
@@ -100,7 +100,7 @@ services:
     depends_on:
       - resourcemanager
     env_file:
-      - ./config
+      - ./base/hadoop.env
     volumes:
       - nodemanager:/data
 
@@ -112,7 +112,7 @@ services:
       - resourcemanager
     command: [ "yarn", "timelineserver" ]
     env_file:
-      - ./config
+      - ./base/hadoop.env
     volumes:
       - timelineserver:/data
       

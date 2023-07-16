@@ -20,13 +20,19 @@ sandbox project for diginamic classes on hadoop
 make cluster
 ```
 
-- Start the cluster (in the root directory, add "-d" to run in background)
+- Start the cluster (in the root directory, use **make run** instead to run in foreground)
 
 ```bash
 make up
 ```
 
 ## Test the cluster
+
+- check status of the cluster (in the root directory)
+
+```bash
+make status
+```
 
 - peek at a running container's logs (replace **CONTAINER_NAME**)
 
