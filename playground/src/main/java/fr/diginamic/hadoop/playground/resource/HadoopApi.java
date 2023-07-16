@@ -21,7 +21,7 @@ public class HadoopApi {
 
   private final HadoopService service;
 
-  @GetMapping("/open")
+  @GetMapping("/hadoop/open")
   public ResponseEntity<Flux<DataBuffer>> open(
       @RequestParam(defaultValue = "") final String path,
       @RequestParam final String file) {
@@ -32,7 +32,7 @@ public class HadoopApi {
         .body(service.open(path, file));
   }
 
-  @GetMapping("/status")
+  @GetMapping("/hadoop/status")
   public ResponseEntity<Mono<String>> status(
       @RequestParam(defaultValue = "") final String path) {
 

@@ -1,6 +1,6 @@
-# hadoop-sandbox
+# Hadoop Cluster
 
-sandbox project for diginamic classes on hadoop
+sandbox project deploying a hadoop cluster with docker (fully distributed mode with zookeeper and hbase), the spring boot application can be used to interact with the cluster.
 
 ## Prerequisites
 
@@ -34,23 +34,17 @@ make up
 make status
 ```
 
-- peek at a running container's logs (replace **CONTAINER_NAME**)
-
-```bash
-docker container logs CONTAINER_NAME
-```
-
 - test in a browser
   - [cluster health](http://localhost:9870) - namenode
   - [yarn](http://localhost:8088) - resourcemanager
-  - [filesystem status](http://localhost:3141/status) - playground
+  - [swagger](http://localhost:7080/swagger) - playground
 
 ### MapReduce
 
-- Connect to the cluster (most useful volumes are mounted in the resourcemanager container)
+- Connect to the cluster
 
 ```bash
-docker exec -it resourcemanager bash
+make connect
 ```
 
 - create a file containing any text (in the resourcemanager container)

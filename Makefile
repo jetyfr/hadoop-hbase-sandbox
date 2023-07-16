@@ -25,3 +25,6 @@ reset:
 
 status:
 	clear && docker images && docker volume ls && docker ps -a
+
+connect:
+	clear && docker exec -it resourcemanager bashS

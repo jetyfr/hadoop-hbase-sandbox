@@ -2,6 +2,8 @@ spring:
   main:
     web-application-type: reactive
 
-logging:
-  level:
-    '[fr.diginamic.hadoop]': debug
+springdoc:
+  swagger-ui:
+    path: /swagger
+  api-docs:
+    path: /docs
