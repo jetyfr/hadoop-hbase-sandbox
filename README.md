@@ -1,6 +1,6 @@
 # Hadoop Cluster
 
-sandbox project deploying a hadoop cluster with docker (fully distributed mode with zookeeper and hbase)
+Sandbox project deploying a hadoop cluster with docker (fully distributed mode with zookeeper and hbase)
 
 ## Prerequisites
 
