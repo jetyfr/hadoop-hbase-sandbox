@@ -1,6 +1,6 @@
 FROM eclipse-temurin:8-jre-jammy
 
-ENV HBASE_VERSION 2.5.5
+ENV HBASE_VERSION 2.5.10
 ENV HBASE_URL https://downloads.apache.org/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz
 
 # install
