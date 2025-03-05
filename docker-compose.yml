@@ -2,19 +2,7 @@ version: "sandbox"
 
 # start order : namenode/zoos -> datanodes -> resourcemanager -> nodemanager/timelineserver/hbase-master -> hbase-region
 
-services:
-  playground:
-    image: playground:sandbox
-    hostname: playground
-    container_name: playground
-    command: [ "java", "-jar", "/target/playground.jar" ]
-    ports:
-      - 7080:8080
-    environment:
-      SPRING_PROFILES_ACTIVE: web
-    volumes:
-      - ./playground/target:/target
-
+services: 
   namenode:
     image: hadoop:sandbox
     hostname: namenode

@@ -1,29 +1,23 @@
-# Hadoop Cluster
+# Hadoop/Hbase Cluster
 
-Sandbox project deploying a hadoop cluster with docker (fully distributed mode with zookeeper and hbase)
-
-## Prerequisites
-
-- [docker](https://docs.docker.com/install/)
+Project deploying cluster with docker (fully distributed mode)
+- hadoop
+- hbase
+- zookeeper
 
 ## Getting started
-
-- build the playground (in the playground directory)
-
-```bash
-./mvnw clean package
-```
 
 - build required images (in the root directory)
 
 ```bash
-make cluster
+docker build -t hadoop:sandbox -f base/hadoop.Dockerfile base	
+docker build -t hbase:sandbox -f base/hbase.Dockerfile base
 ```
 
-- Start the cluster (in the root directory, use **make run** instead to run in foreground)
+- Start the cluster (in the root directory)
 
 ```bash
-make up
+docker compose up -d --remove-orphans
 ```
 
 ## Test the cluster (requires the cluster to be up and running)
@@ -31,7 +25,7 @@ make up
 - in the root directory
 
 ```bash
-make status
+docker images && docker volume ls && docker ps -a
 ```
 
 - in a browser
@@ -39,45 +33,24 @@ make status
   - [yarn](http://localhost:8088) - resourcemanager
   - [swagger](http://localhost:7080/swagger) - playground
 
-### MapReduce
+### Coonect
 
 - Connect to the cluster
 
 ```bash
-make connect
+docker exec -it resourcemanager bash
 ```
-
-- create a file containing any text (in the resourcemanager container)
-
-```bash
-echo "hello world !" > input.txt
-```
-
-- copy the created file to hdfs (in the resourcemanager container)
-
-```bash
-hdfs dfs -put input.txt
-```
-
-- run wordcount on the added file (in the resourcemanager container, should display the result)
-
-```bash
-yarn jar archives/playground.jar wordcount /input.txt output && \
-hdfs dfs -cat output/part-r-00000
-```
-
-### HBase
 
 ## Clean up
 
 - Stop the cluster (in the root directory)
 
 ```bash
-make stop
+docker compose stop
 ```
 
 - reset the cluster (in the root director)
 
 ```bash
-make reset
+docker compose down -v
 ```

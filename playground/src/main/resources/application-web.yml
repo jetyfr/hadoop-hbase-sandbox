@@ -1,9 +1,0 @@
-spring:
-  main:
-    web-application-type: reactive
-
-springdoc:
-  swagger-ui:
-    path: /swagger
-  api-docs:
-    path: /docs
