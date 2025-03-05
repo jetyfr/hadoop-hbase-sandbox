@@ -42,6 +42,13 @@ docker exec -it resourcemanager /bin/bash
 ```
 
 ### HBase
+
+- Start HBase shell CLI
+
+```bash
+docker exec -ti hbase-master hbase shell
+```
+
 - Start HBase Rest Server
 
 ```bash
