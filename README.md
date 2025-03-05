@@ -33,12 +33,19 @@ docker images && docker volume ls && docker ps -a
   - [yarn](http://localhost:8088) - resourcemanager
   - [swagger](http://localhost:7080/swagger) - playground
 
-### Coonect
+### Connect
 
 - Connect to the cluster
 
 ```bash
-docker exec -it resourcemanager bash
+docker exec -it resourcemanager /bin/bash
+```
+
+### HBase
+- Start HBase Rest Server
+
+```bash
+docker exec hbase-master hbase rest start
 ```
 
 ## Clean up
