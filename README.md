@@ -31,7 +31,6 @@ docker images && docker volume ls && docker ps -a
 - in a browser
   - [cluster health](http://localhost:9870) - namenode
   - [yarn](http://localhost:8088) - resourcemanager
-  - [swagger](http://localhost:7080/swagger) - playground
 
 ### Connect
 
